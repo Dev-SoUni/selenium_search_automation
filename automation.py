@@ -13,7 +13,7 @@ def make_url(query, page=1):
     :param query: 검색어 키워드
     :return: 검색 키워드가 포함된 URL
     """
-    return f"https://search.daum.net/search?w=tot&DA=PGD&q={query}&p={page}"
+    return f"https://search.daum.net/search?w=fusion&col=blog&q={query}&DA=TWA&p={page}"
 
 
 def load_data():
