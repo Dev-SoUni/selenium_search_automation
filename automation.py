@@ -31,6 +31,23 @@ def load_data():
     return json_data
 
 
+def get_chrome_options():
+    """
+    `Chrome Driver` 옵션 값 생성
+
+    :return: ChromeOptions
+    """
+    options = webdriver.ChromeOptions()
+
+    # 매크로 탐지를 회피하기 위한 `UserAgent` 설정
+    options.add_argument("user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36")
+
+    # 시크릿 모드 활성화
+    options.add_argument("--incognito")
+
+    return options
+
+
 def find_element(driver, website_url):
     """
     `website_url`에 해당하는 블로그 게시물 HTML 요소를 탐색 후 반환합니다.
@@ -95,7 +112,7 @@ def search(driver, website_url, query, start_page, end_page):
 
 if __name__ == '__main__':
     # Chrome Driver 생성
-    driver = webdriver.Chrome()
+    driver = webdriver.Chrome(options=get_chrome_options())
 
     # 데이터 불러오기
     data = load_data()
