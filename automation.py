@@ -118,12 +118,14 @@ if __name__ == '__main__':
     data = load_data()
 
     website_url = data["website_url"]
+    start_page = data["start_page"]
+    end_page = data["end_page"]
     queries = data["queries"]
 
     # 검색어를 순회하며 자동화를 수행합니다.
     for query in queries:
         # 블로그 게시물 탐색 (페이지를 전환해가며 탐색)
-        element = search(driver=driver, website_url=website_url, query=query, start_page=1, end_page=5)
+        element = search(driver=driver, website_url=website_url, query=query, start_page=start_page, end_page=end_page)
         if element is None:
             print(f"해당 검색어({query})의 검색 결과로는 블로그 게시물을 찾지 못했습니다.")
             continue

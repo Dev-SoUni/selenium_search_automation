@@ -1,5 +1,7 @@
 {
   "website_url": "ribbit-ribbit.tistory.com",
+  "start_page": 1,
+  "end_page": 11,
   "queries": [
     "strip() lstrip()",
     "동적계획법과 분할정복",
