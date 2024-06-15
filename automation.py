@@ -135,10 +135,10 @@ if __name__ == '__main__':
             print(f"해당 검색어({query})의 블로그 게시물 요소 내에서 `a` 태그를 찾지 못하였습니다.")
             continue
 
-        # 블로그 게시물 열기 및 활성 탭 변경 후 1초 대기
+        # 블로그 게시물 열기 및 활성 탭 변경 후 2초 대기
         anchor.click()
         driver.switch_to.window(driver.window_handles[1])
-        time.sleep(1)
+        time.sleep(2)
 
         # 블로그 게시물 탭 닫기 및 활성 탭 변경 후 0.25초 대기
         driver.close()
