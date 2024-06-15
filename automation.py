@@ -6,14 +6,14 @@ from selenium.common import NoSuchElementException
 from selenium.webdriver.common.by import By
 
 
-def make_url(query):
+def make_url(query, page=1):
     """
     `daum` 검색 URL을 생성해줍니다.
 
     :param query: 검색어 키워드
     :return: 검색 키워드가 포함된 URL
     """
-    return f"https://search.daum.net/search?w=tot&DA=PGD&q={query}"
+    return f"https://search.daum.net/search?w=tot&DA=PGD&q={query}&p={page}"
 
 
 def load_data():
@@ -67,6 +67,32 @@ def find_anchor(element):
         return None
 
 
+def search(driver, website_url, query, start_page, end_page):
+    """
+    페이지를 순차적으로 전환해가며 블로그 게시물을 탐색
+
+    :param driver: Chrome Driver
+    :param query: 검색어 키워드
+    :param start_page: 탐색 시작 페이지
+    :param end_page: 탐색 종료 페이지
+    :return: 블로그 게시물 HTML 요소 | None
+    """
+    for current_page in range(start_page, end_page + 1):
+        url = make_url(query, page=current_page)
+
+        # URL 접근 후 0.25초 대기
+        driver.get(url)
+        time.sleep(0.25)
+
+        # 태그 분석 및 게시물 탐색
+        element = find_element(driver, website_url)
+
+        if element:
+            return element
+
+    return None
+
+
 if __name__ == '__main__':
     # Chrome Driver 생성
     driver = webdriver.Chrome()
@@ -79,14 +105,8 @@ if __name__ == '__main__':
 
     # 검색어를 순회하며 자동화를 수행합니다.
     for query in queries:
-        url = make_url(query)
-
-        # URL 접근
-        driver.get(url)
-        time.sleep(1)
-
-        # 태그 분석 및 게시물 탐색
-        element = find_element(driver, website_url)
+        # 블로그 게시물 탐색 (페이지를 전환해가며 탐색)
+        element = search(driver=driver, website_url=website_url, query=query, start_page=1, end_page=5)
         if element is None:
             print(f"해당 검색어({query})의 검색 결과로는 블로그 게시물을 찾지 못했습니다.")
             continue
