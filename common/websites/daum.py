@@ -33,6 +33,8 @@ class Daum:
             except NoSuchElementException:
                 pass
 
+        return None
+
     def search(self, query, start_page=1, end_page=11):
         """
         검색을 통해 블로그 게시물 탐색
