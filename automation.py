@@ -2,6 +2,7 @@ import json
 
 from common.selenium.driver import get_chrome_driver
 from common.websites.daum import Daum
+from common.websites.google import Google
 
 
 def load_data():
@@ -26,24 +27,35 @@ if __name__ == '__main__':
     # 데이터 불러오기
     data = load_data()
 
-    website_url = data["website_url"]
-    start_page = data["start_page"]
-    end_page = data["end_page"]
-    queries = data["queries"]
+    # 작업별로 순회하며 자동화를 수행
+    for task in data["tasks"]:
+        if task["website"] == "daum":
+            daum = Daum(driver, task["website_url"])
 
-    # Daum 검색 인스턴스 생성
-    daum = Daum(driver, website_url)
+            # 검색어를 순회하며 게시물 탐색 후 방문
+            for query in task["queries"]:
+                # 블로그 게시물 탐색 (페이지를 전환해가며 탐색)
+                element = daum.search(query, task["start_page"], task["end_page"])
+                if element is None:
+                    print(f"해당 검색어({query})의 검색 결과로는 블로그 게시물을 찾지 못했습니다.")
+                    continue
 
-    # 검색어를 순회하며 자동화를 수행합니다.
-    for query in queries:
-        # 블로그 게시물 탐색 (페이지를 전환해가며 탐색)
-        element = daum.search(query, start_page, end_page)
-        if element is None:
-            print(f"해당 검색어({query})의 검색 결과로는 블로그 게시물을 찾지 못했습니다.")
-            continue
+                # 블로그 게시물 방문
+                daum.visit(element)
 
-        # 블로그 게시물 방문
-        daum.visit(element)
+        if task["website"] == "google":
+            google = Google(driver, task["website_url"])
+
+            # 검색어를 순회하며 게시물 탐색 후 방문
+            for query in task["queries"]:
+                # 블로그 게시물 탐색 (페이지를 전환해가며 탐색)
+                element = google.search(query)
+                if element is None:
+                    print(f"해당 검색어({query})의 검색 결과로는 블로그 게시물을 찾지 못했습니다.")
+                    continue
+
+                # 블로그 게시물 방문
+                google.visit(element)
 
     # Chrome Driver 종료
     driver.quit()
